@@ -4,7 +4,6 @@ public class Product {
 
     private String productName;
     private int image;
-
     public Product(String productName, int image) {
         this.productName = productName;
         this.image = image;

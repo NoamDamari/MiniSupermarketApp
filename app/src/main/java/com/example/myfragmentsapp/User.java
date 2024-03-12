@@ -1,19 +1,38 @@
 package com.example.myfragmentsapp;
 
+import android.view.View;
+import android.widget.EditText;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 
 public class User {
-
     private String username;
+    private String email;
     private String password;
     private String phoneNumber;
-    private ArrayList<Product> user_products;
+    private ArrayList<String> user_products;
 
-    public User(String username, String password, String phoneNumber, ArrayList<Product> user_products) {
+    public User(String username , String email, String phoneNumber) {
         this.username = username;
-        this.password = password;
+        this.email = email;
         this.phoneNumber = phoneNumber;
-        this.user_products = user_products;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", user_products=" + user_products +
+                '}';
     }
 
     public String getUsername() {
@@ -22,6 +41,14 @@ public class User {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {
@@ -40,11 +67,12 @@ public class User {
         this.phoneNumber = phoneNumber;
     }
 
-    public ArrayList<Product> getUser_products() {
+    public ArrayList<String> getUser_products() {
         return user_products;
     }
 
-    public void setUser_products(ArrayList<Product> user_products) {
+    public void setUser_products(ArrayList<String> user_products) {
         this.user_products = user_products;
     }
+
 }
