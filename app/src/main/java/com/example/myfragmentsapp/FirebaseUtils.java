@@ -1,5 +1,11 @@
 package com.example.myfragmentsapp;
 
+import static java.security.AccessController.getContext;
+
+import android.content.Context;
+import android.util.Log;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -15,8 +21,6 @@ import java.util.List;
 public class FirebaseUtils {
     private static FirebaseDatabase mDatabase;
     public FirebaseAuth mAuth;
-    private static String currentUserId;
-
     public FirebaseAuth getmAuth() {
         return mAuth;
     }
@@ -31,27 +35,57 @@ public class FirebaseUtils {
         DatabaseReference myRef = mDatabase.getReference("users").child(uid);
         myRef.setValue(user);
     }
-
-    public static void addProductToUserListOnDB(String userId , String productName) {
-        DatabaseReference userProductsRef = FirebaseDatabase.getInstance().getReference("users")
-                .child(userId)
-                .child("products");
-        userProductsRef.push().setValue(productName);
+    public static void signOut() {
+        FirebaseAuth.getInstance().signOut();
     }
 
-    public static List<String> getUserProductsFromFirebase(String uid ,final OnDataLoadedListener listener ) {
+    public static void addItemToUserListOnDB(String uid , String itemName , String itemQuantity , Context context) {
+        DatabaseReference userProductsRef = FirebaseDatabase.getInstance().getReference()
+                .child("users")
+                .child(uid)
+                .child("products");
+        userProductsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.hasChild(itemName)) {
+
+                    int intItemQuantity = Integer.parseInt(itemQuantity);
+                    if (intItemQuantity <= 0) {
+                        Toast.makeText(context, "Product Quantity Cant be 0", Toast.LENGTH_SHORT).show();
+                    } else {
+                        userProductsRef.child(itemName).setValue(itemQuantity);
+                    }
+                } else {
+                    int intQuantity = Integer.parseInt(itemQuantity);
+                    if (intQuantity > 0) {
+                        userProductsRef.child(itemName).setValue(itemQuantity);
+                    } else {
+                        Toast.makeText(context, "Product Quantity Cant be 0", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("MainActivity", "Error Updating Item data", databaseError.toException());
+            }
+        });
+
+    }
+    public static List<ListItem> getUserItemsFromFirebase(String uid ,final OnItemsDataLoadedListener listener ) {
         DatabaseReference userProductsRef = FirebaseDatabase.getInstance().getReference("users")
                 .child(uid)
                 .child("products");
-        List<String> productsList = new ArrayList<>();
+        List<ListItem> itemsList = new ArrayList<>();
         userProductsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot productSnapshot : dataSnapshot.getChildren()) {
-                    String product = productSnapshot.getValue(String.class);
-                    productsList.add(product);
+                for (DataSnapshot itemSnapshot : dataSnapshot.getChildren()) {
+                    String itemName = itemSnapshot.getKey();
+                    String itemQuantity = itemSnapshot.getValue(String.class);
+                    ListItem item = new ListItem(itemName , itemQuantity);
+                    itemsList.add(item);
                 }
-                listener.onDataLoaded(productsList);
+                listener.onItemsDataLoaded(itemsList);
                 System.out.println("User products updated successfully");
             }
             @Override
@@ -59,15 +93,11 @@ public class FirebaseUtils {
                 System.out.println("Error reading user products data: " + databaseError.getMessage());
             }
         });
-        return productsList;
+        return itemsList;
     }
 
-    public static void signOut() {
-        FirebaseAuth.getInstance().signOut();
-    }
-
-    public interface OnDataLoadedListener {
-        void onDataLoaded(List<String> products);
+    public interface OnItemsDataLoadedListener {
+        void onItemsDataLoaded(List<ListItem> items);
     }
 }
 

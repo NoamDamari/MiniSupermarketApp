@@ -23,6 +23,11 @@
         android:text="Products"
         android:textSize="34sp" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/userItemsRV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"

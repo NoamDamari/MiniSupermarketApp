@@ -33,7 +33,6 @@ public class CustomeAdapter extends RecyclerView.Adapter<CustomeAdapter.MyViewHo
     public CustomeAdapter(ArrayList<Product> products, Context context) {
         this.products = products;
         this.context = context;
-
     }
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
@@ -93,9 +92,10 @@ public class CustomeAdapter extends RecyclerView.Adapter<CustomeAdapter.MyViewHo
 
         holder.addProductButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                String productName = holder.productName.getText().toString();
                 String uid = mAuth.getCurrentUser().getUid();
-                FirebaseUtils.addProductToUserListOnDB(uid ,productName);
+                String productName = holder.productName.getText().toString();
+                String productQuantity = holder.productQuantity.getText().toString();
+                FirebaseUtils.addItemToUserListOnDB(uid , productName , productQuantity , holder.itemView.getContext());
             }
         });
     }

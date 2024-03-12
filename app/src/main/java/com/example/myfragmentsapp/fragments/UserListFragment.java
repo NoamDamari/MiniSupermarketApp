@@ -4,6 +4,9 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +15,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.example.myfragmentsapp.CustomeAdapter;
 import com.example.myfragmentsapp.FirebaseUtils;
+import com.example.myfragmentsapp.ItemAdapter;
+import com.example.myfragmentsapp.ListItem;
 import com.example.myfragmentsapp.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
@@ -22,9 +28,12 @@ import java.util.List;
 
 public class UserListFragment extends Fragment {
 
-    Button returnButton;
-    Button logOutButton;
-    ListView listView;
+    private Button returnButton;
+    private Button logOutButton;
+    private ListView listView;
+    private ItemAdapter itemAdapter;
+    private RecyclerView itemsRV;
+    private LinearLayoutManager linearLayoutManager;
 
     public UserListFragment() {
         // Required empty public constructor
@@ -39,19 +48,25 @@ public class UserListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         View view = inflater.inflate(R.layout.fragment_user_list, container, false);
         returnButton = view.findViewById(R.id.returnButton);
         logOutButton = view.findViewById(R.id.logOutButton);
         listView = (ListView) view.findViewById(R.id.listView);
 
+        linearLayoutManager = new LinearLayoutManager(getContext());
+        itemsRV = view.findViewById(R.id.userItemsRV);
+        itemsRV.setLayoutManager(linearLayoutManager);
+        itemsRV.setItemAnimator(new DefaultItemAnimator());
+
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         String uid = mAuth.getCurrentUser().getUid();
-        FirebaseUtils.getUserProductsFromFirebase(uid, new FirebaseUtils.OnDataLoadedListener() {
+
+        FirebaseUtils.getUserItemsFromFirebase(uid, new FirebaseUtils.OnItemsDataLoadedListener() {
             @Override
-            public void onDataLoaded(List<String> products) {
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, products);
-                listView.setAdapter(adapter);
+            public void onItemsDataLoaded(List<ListItem> items) {
+                itemAdapter = new ItemAdapter(items);
+                itemsRV.setAdapter(itemAdapter);
             }
         });
 
