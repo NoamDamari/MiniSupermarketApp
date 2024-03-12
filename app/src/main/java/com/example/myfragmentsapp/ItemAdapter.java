@@ -8,6 +8,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.util.List;
 
 public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder> {
@@ -51,7 +53,9 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
                     itemsList.remove(adapterPosition);
                     notifyItemRemoved(adapterPosition);
 
-                    // Remove Item From FireBase:
+                    String uid = FirebaseAuth.getInstance().getUid();
+                    String itemName = listItem.getItemName();
+                    FirebaseUtils.removeItemFromUserListInDB(uid , itemName);
                 }
             }
         });

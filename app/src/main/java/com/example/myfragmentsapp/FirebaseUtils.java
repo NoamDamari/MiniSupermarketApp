@@ -8,6 +8,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -21,6 +23,8 @@ import java.util.List;
 public class FirebaseUtils {
     private static FirebaseDatabase mDatabase;
     public FirebaseAuth mAuth;
+
+
     public FirebaseAuth getmAuth() {
         return mAuth;
     }
@@ -98,6 +102,27 @@ public class FirebaseUtils {
 
     public interface OnItemsDataLoadedListener {
         void onItemsDataLoaded(List<ListItem> items);
+    }
+
+    public static void removeItemFromUserListInDB(String uid, String itemName) {
+        DatabaseReference userProductsRef = FirebaseDatabase.getInstance().getReference("users")
+                .child(uid)
+                .child("products")
+                .child(itemName);
+
+        userProductsRef.removeValue()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("FirebaseUtils", "Item removed successfully from user's list");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e("FirebaseUtils", "Error removing item from user's list", e);
+                    }
+                });
     }
 }
 
