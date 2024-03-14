@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.myfragmentsapp.CustomeAdapter;
 import com.example.myfragmentsapp.FirebaseUtils;
@@ -28,9 +29,9 @@ import java.util.List;
 
 public class UserListFragment extends Fragment {
 
+    private TextView usernameTV;
     private Button returnButton;
     private Button logOutButton;
-    private ListView listView;
     private ItemAdapter itemAdapter;
     private RecyclerView itemsRV;
     private LinearLayoutManager linearLayoutManager;
@@ -38,7 +39,6 @@ public class UserListFragment extends Fragment {
     public UserListFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,8 +52,7 @@ public class UserListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_user_list, container, false);
         returnButton = view.findViewById(R.id.returnButton);
         logOutButton = view.findViewById(R.id.logOutButton);
-        listView = (ListView) view.findViewById(R.id.listView);
-
+        usernameTV = view.findViewById(R.id.userListUsername);
         linearLayoutManager = new LinearLayoutManager(getContext());
         itemsRV = view.findViewById(R.id.userItemsRV);
         itemsRV.setLayoutManager(linearLayoutManager);
@@ -61,6 +60,10 @@ public class UserListFragment extends Fragment {
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         String uid = mAuth.getCurrentUser().getUid();
+
+        Bundle bundle = getArguments();
+        String username = bundle.getString("username");
+        usernameTV.setText(username);
 
         FirebaseUtils.getUserItemsFromFirebase(uid, new FirebaseUtils.OnItemsDataLoadedListener() {
             @Override

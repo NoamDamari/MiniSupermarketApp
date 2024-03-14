@@ -93,7 +93,9 @@ public class MainFragment extends Fragment {
         continueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Navigation.findNavController(view).navigate(R.id.action_mainFragment_to_userListFragment);
+                Bundle bundle = new Bundle();
+                bundle.putString("username" , username);
+                Navigation.findNavController(view).navigate(R.id.action_mainFragment_to_userListFragment , bundle);
             }
         });
 

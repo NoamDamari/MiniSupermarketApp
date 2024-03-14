@@ -3,10 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ABDAAD"
+    android:background="@drawable/light_blue_background"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    tools:context=".fragments.MainFragment">
+    tools:context=".fragments.MainFragment"
+    android:padding="16dp">
 
     <TextView
         android:id="@+id/userListUsername"
@@ -14,36 +15,46 @@
         android:layout_height="wrap_content"
         android:text="User Name "
         android:textSize="48sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"/>
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Products"
-        android:textSize="34sp" />
+        android:textSize="34sp"
+        android:textAlignment="center"
+        android:textColor="@color/white"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/userItemsRV"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <ListView
-        android:id="@+id/listView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.2" />
+        android:layout_height="450dp" />
 
     <Button
         android:id="@+id/returnButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Return" />
+        android:text="Return"
+        android:textSize="18dp"
+        android:backgroundTint="@color/white"
+        android:textColor="#39976B"
+        android:layout_marginTop="20dp"
+        android:padding="6dp"
+        android:layout_marginBottom="2dp"/>
 
     <Button
         android:id="@+id/logOutButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Log Out" />
+        android:text="Log Out"
+        android:textSize="18dp"
+        android:backgroundTint="@color/white"
+        android:textColor="#39976B"
+        android:layout_marginTop="2dp"
+        android:padding="6dp"
+        android:layout_marginBottom="6dp"/>
 
 </LinearLayout>
